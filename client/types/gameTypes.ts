@@ -1,13 +1,13 @@
-export interface Game {
+export interface IGame {
     credits: number;
     combination: string[];
 }
 
-export interface RollResponse {
+export interface IRollResponse {
     credits: number;
     result: string[];
 }
 
-export interface CashOutResponse {
+export interface ICashOutResponse {
     credits: number;
 }
