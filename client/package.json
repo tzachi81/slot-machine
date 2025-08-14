@@ -1,0 +1,9 @@
+{
+    "scripts": {
+    "tsc": "./node_modules/typescript/bin/tsc",
+    "postinstall": "yarn tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}

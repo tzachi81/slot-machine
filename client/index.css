@@ -1,0 +1,13 @@
+ .slotTable {
+     border-collapse: collapse;
+     margin: 20px;
+ }
+
+ .slotTable td {
+     border: 1px solid black;
+     width: 50px;
+     height: 50px;
+     text-align: center;
+     font-size: 2em;
+     font-weight: bold;
+ }
