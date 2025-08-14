@@ -1,9 +1,15 @@
 {
     "scripts": {
-    "tsc": "./node_modules/typescript/bin/tsc",
-    "postinstall": "yarn tsc"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.2"
-  }
+        "tsc": "./node_modules/typescript/bin/tsc",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.2",
+        "vite": "^7.1.2",
+        "vite-plugin-dts": "^4.5.4"
+    },
+    "dependencies": {
+        "@types/jquery": "^3.5.32",
+        "jquery": "^3.7.1"
+    }
 }
