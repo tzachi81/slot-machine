@@ -6,3 +6,8 @@ export interface IRollResponse {
 export interface ICashOutResponse {
     credits: number;
 }
+
+export interface ISessionResponse {
+    status:string,
+    message:string
+}

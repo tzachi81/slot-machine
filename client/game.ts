@@ -1,4 +1,4 @@
-import { ICashOutResponse, IRollResponse } from './types/gameTypes';
+import { ICashOutResponse, IRollResponse, ISessionResponse } from './types/gameTypes';
 import { GameService } from './services/gameService';
 import $ from 'jquery';
 
@@ -9,24 +9,45 @@ $(function () {
 
     let game: IRollResponse = { credits: 10, result: ['X', 'X', 'X'] };
 
-    function initGame() {
+    async function initGame() {
+
+        $('#resetButton').prop('disabled', true);
+        $('#cashOutButton').removeAttr('disabled');
+        $('#rollButton').removeAttr('disabled');
 
         $('.cashOut p').hide();
         $('.cashOut #amount').html('');
         $('#credits').html(String(game.credits));
+
+        //Make sure the server session is reset!
+        await gameService.checkServer()
+        .then((response: ISessionResponse) => {
+              $("#sessionMessage").html(response.status).fadeOut(3000);
+        }).catch((error: Error) => {
+            $("#sessionMessage").html(`${error.name}, ${error.message}`).fadeOut(3000);
+        }
+        )
+
     }
 
 
     initGame();
 
+
+
     $('#rollButton').on('click', async () => {
         $("#rollButton").prop('disabled', true);
         await roll();
     });
+
     $('#cashOutButton').on('click', async () => {
         await cashOut();
         $("#rollButton").prop('disabled', true);
         $('#cashOutButton').prop('disabled', true);
+    });
+
+    $('#resetButton').on('click', () => {
+        initGame();
     });
 
     async function roll(): Promise<void> {
@@ -67,8 +88,8 @@ $(function () {
                 console.error('Failed to roll:', error);
             }
         } finally {
-
             $('.cashOut p').show();
+            $('#resetButton').removeAttr('disabled');
         }
     }
 

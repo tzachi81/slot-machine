@@ -1,4 +1,4 @@
-import { IRollResponse, ICashOutResponse } from '../types/gameTypes';
+import { IRollResponse, ICashOutResponse, ISessionResponse } from '../types/gameTypes';
 import $ from 'jquery';
 
 export class GameService {
@@ -6,6 +6,25 @@ export class GameService {
 
     constructor(baseUrl: string) {
         this.baseUrl = baseUrl;
+    }
+
+    async checkServer(): Promise<ISessionResponse> {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `${this.baseUrl}/health`,
+                method: 'GET',
+                dataType: 'json',
+                success: (data) => {
+                    console.log(data);
+                    resolve(data);
+                },
+                error: (jqXHR, textStatus, errorThrown: string) => {
+                    console.error('Error:', textStatus, errorThrown);
+                    console.log('Response Text:', jqXHR.responseText);
+                    reject(`Error:, ${textStatus}, ${errorThrown}`);
+                }
+            });
+        });
     }
 
     async roll(): Promise<IRollResponse> {
