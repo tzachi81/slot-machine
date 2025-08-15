@@ -20,6 +20,7 @@ $(function () {
 
     let game: IRollResponse = { credits: 10, result: ['X', 'X', 'X'] };
 
+    $('#credits').html(String(game.credits));
 
     $('#rollButton').on('click', async () => {
         console.log('Roling...');
@@ -27,7 +28,11 @@ $(function () {
     });
 
     async function roll(): Promise<void> {
+        
         try {
+            game.credits--;
+            updateCredits(game.credits);
+            if (game.credits === 0) return;
 
             const rollResult: IRollResponse = await gameService.roll();
             console.log('rollResult', rollResult);
@@ -35,22 +40,25 @@ $(function () {
             // I need to replace it with delyed rendering function
             // something like:
             //await renderDelayedResult(rollResult.result);
-            renderResult(rollResult);
+            await renderResult(rollResult.result);
+            updateCredits(rollResult.credits);
 
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
             }
         } finally {
-            //???
         }
     }
 
-    function renderResult(rollResult: IRollResponse) {
+    async function renderResult(result: string[]) {
 
-        rollResult.result.forEach((symbol, index) => {
+        result.forEach((symbol, index) => {
             $(`#cell-${index + 1}`).text(symbol);
         });
     }
 
+    function updateCredits(credits: number | undefined) {
+        if (credits) $('#credits').html(String(credits));
+    }
 });
