@@ -10,23 +10,31 @@
 
 <body>
     <h1>Slot Machine</h1>
-    <div>
+    <div class="creditsWrapper">
         <label>Credits: </label>
         <span id="credits"></span>
-        <button id="rollButton">Roll</button>
     </div>
-    <table class="slotTable">
-        <tr>
-            <td id="cell-1">X</td>
-            <td id="cell-2">X</td>
-            <td id="cell-3">X</td>
-        </tr>
-    </table>
 
-    <div id="cashOut">
-        <button id="cashOutButton">Cash Out</button>
+
+    <div class="mainContent">
+        <table class="slotTable">
+            <tr>
+                <td id="cell-1">X</td>
+                <td id="cell-2">X</td>
+                <td id="cell-3">X</td>
+            </tr>
+        </table>
+
+        <div class="actionButtons">
+            <button id="rollButton">Roll</button>
+            <button id="cashOutButton">Cash Out</button>
+        </div>
+        <!-- mainContent -->
+    </div> 
+    <div class="cashOut">
         <p><label>You get: </label><span id="amount"></span></p>
-    </p>
+        </p>
+    </div>
 
     <script src="./dist/game.umd.js"></script>
 

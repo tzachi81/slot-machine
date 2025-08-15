@@ -1,13 +1,67 @@
+:root{
+    --gameGold: rgb(191, 162, 31);
+    --gameGoldAccent: rgba(191, 162, 31, 0.2);
+    --gameGoldText: rgb(237, 196, 13);
+    --gameButtonDisabled:rgba(191, 162, 31, 0.163);
+}
+
+ body{
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    color: var(--gameGoldText);
+    text-align: center;
+    background-color: rgba(23, 23, 23, 0.8);
+ }
+ label,p {
+    font-size: 18px;
+ }
+
+button{
+    border: 1px solid var(--gameGold);
+    height: 50px;
+    background-color: var(--gameGoldAccent);
+    box-shadow: 2px 1px var(--gameGold);
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--gameGoldText);
+    margin: 7px;
+
+    &:active{
+        box-shadow: none
+    }
+    &:disabled{
+        color: var(--gameGoldAccent);
+        border: 1px dotted var(--gameGoldAccent);
+        background-color: transparent;
+        box-shadow: none;
+    }
+}
+
+.creditsWrapper{
+    margin-bottom: 17px;
+}
  .slotTable {
      border-collapse: collapse;
      margin: 20px;
  }
 
  .slotTable td {
-     border: 1px solid black;
+     border: 3px solid var(--gameGold);
      width: 50px;
      height: 50px;
      text-align: center;
      font-size: 2em;
      font-weight: bold;
+ }
+
+.actionButtons, .cashOut{
+    display: flex;
+    flex-direction: column;
+    margin-top: 17px;
+
+    p{
+        text-align: center;
+    }
  }

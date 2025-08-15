@@ -11,8 +11,8 @@ $(function () {
 
     function initGame() {
 
-        $('#cashOut p').hide();
-        $('#cashOut #amount').html('');
+        $('.cashOut p').hide();
+        $('.cashOut #amount').html('');
         $('#credits').html(String(game.credits));
     }
 
@@ -20,15 +20,14 @@ $(function () {
     initGame();
 
     $('#rollButton').on('click', async () => {
+        $("#rollButton").prop('disabled', true);
         await roll();
     });
     $('#cashOutButton').on('click', async () => {
         await cashOut();
+        $("#rollButton").prop('disabled', true);
+        $('#cashOutButton').prop('disabled', true);
     });
-
-    function toggleRollButton() {
-        $("#rollButton").prop('disabled', (index, value) => !value);
-    }
 
     async function roll(): Promise<void> {
 
@@ -36,7 +35,6 @@ $(function () {
             game.credits--;
             updateCredits(game.credits);
             if (game.credits === 0) {
-                $("#rollButton").prop('disabled');
                 return;
             }
 
@@ -44,13 +42,15 @@ $(function () {
             console.log('rollResult', rollResult);
 
             await delayedRenderResult(rollResult.result);
-            updateCredits(rollResult.credits);
 
+            updateCredits(rollResult.credits);
+            
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
             }
         } finally {
+          
         }
     }
 
@@ -60,16 +60,15 @@ $(function () {
             const cashOutResult: ICashOutResponse = await gameService.cashOut();
             updateCredits(cashOutResult.credits);
             const total = cashOutResult.credits + game.credits;
-            $('#cashOut #amount').html(String(total));
+            $('.cashOut #amount').html(String(total));
 
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
             }
         } finally {
-            toggleRollButton();
-            $("#rollButton").prop('disabled');
-            $('#cashOut p').show();
+
+            $('.cashOut p').show();
         }
     }
 
@@ -88,7 +87,6 @@ $(function () {
     async function delayedRenderResult(result: string[]): Promise<void> {
         //I replaced the previous render function to delayed render:
 
-        toggleRollButton();
 
         resetCells();
 
@@ -97,6 +95,6 @@ $(function () {
             game.result[i] = result[i];
             $(`#cell-${i + 1}`).text(game.result[i]);
         }
-        toggleRollButton();
+        $("#rollButton").removeAttr('disabled');
     }
 });
