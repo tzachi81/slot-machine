@@ -24,4 +24,20 @@ export class GameService {
         });
     }
 
+    async cashOut(): Promise<ICashOutResponse> {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `${this.baseUrl}/cashOut`,
+                method: 'GET',
+                dataType: 'json',
+                success: (data: ICashOutResponse) => {
+                    resolve(data);
+                },
+                error: (jqXHR, textStatus, errorThrown) => {
+                    reject(new Error(`Cash out failed: ${textStatus}, ${errorThrown}`));
+                }
+            });
+        });
+    }
+
 }

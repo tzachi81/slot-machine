@@ -25,7 +25,7 @@ if ($requestMethod === 'GET') {
         $credits--;
         echo roll($credits, $symbols);
     } elseif ($requestUri === '/cashOut') {
-        //call `echo cashOut()`;
+        echo cashOut();
     } else {
         http_response_code(404);
         echo json_encode(['error' => 'Endpoint not found']);

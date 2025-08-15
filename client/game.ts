@@ -1,15 +1,4 @@
-//What do I need here?
-
-//init (game)
-//service instance
-//roll click call handler
-//cashOut click handler
-//enable/disable buttons while awaiting response...
-//render results in the cells with delay
-//render the first result ['x','x','x']. Maybe apply it in the init function?
-
-
-import { IRollResponse } from './types/gameTypes';
+import { ICashOutResponse, IRollResponse } from './types/gameTypes';
 import { GameService } from './services/gameService';
 import $ from 'jquery';
 
@@ -20,27 +9,41 @@ $(function () {
 
     let game: IRollResponse = { credits: 10, result: ['X', 'X', 'X'] };
 
-    $('#credits').html(String(game.credits));
+    function initGame() {
+
+        $('#cashOut p').hide();
+        $('#cashOut #amount').html('');
+        $('#credits').html(String(game.credits));
+    }
+
+
+    initGame();
 
     $('#rollButton').on('click', async () => {
-        console.log('Roling...');
         await roll();
     });
+    $('#cashOutButton').on('click', async () => {
+        await cashOut();
+    });
+
+    function toggleRollButton() {
+        $("#rollButton").prop('disabled', (index, value) => !value);
+    }
 
     async function roll(): Promise<void> {
-        
+
         try {
             game.credits--;
             updateCredits(game.credits);
-            if (game.credits === 0) return;
+            if (game.credits === 0) {
+                $("#rollButton").prop('disabled');
+                return;
+            }
 
             const rollResult: IRollResponse = await gameService.roll();
             console.log('rollResult', rollResult);
 
-            // I need to replace it with delyed rendering function
-            // something like:
-            //await renderDelayedResult(rollResult.result);
-            await renderResult(rollResult.result);
+            await delayedRenderResult(rollResult.result);
             updateCredits(rollResult.credits);
 
         } catch (error: unknown) {
@@ -51,14 +54,49 @@ $(function () {
         }
     }
 
-    async function renderResult(result: string[]) {
+    async function cashOut(): Promise<void> {
 
-        result.forEach((symbol, index) => {
-            $(`#cell-${index + 1}`).text(symbol);
+        try {
+            const cashOutResult: ICashOutResponse = await gameService.cashOut();
+            updateCredits(cashOutResult.credits);
+            const total = cashOutResult.credits + game.credits;
+            $('#cashOut #amount').html(String(total));
+
+        } catch (error: unknown) {
+            if (typeof error === 'string') {
+                console.error('Failed to roll:', error);
+            }
+        } finally {
+            toggleRollButton();
+            $("#rollButton").prop('disabled');
+            $('#cashOut p').show();
+        }
+    }
+
+    function updateCredits(credits: number) {
+        game.credits = credits;
+        if (credits) $('#credits').html(String(game.credits));
+    }
+
+
+    function resetCells() {
+        game.result.forEach((symbol, index) => {
+            $(`#cell-${index + 1}`).text('X');
         });
     }
 
-    function updateCredits(credits: number | undefined) {
-        if (credits) $('#credits').html(String(credits));
+    async function delayedRenderResult(result: string[]): Promise<void> {
+        //I replaced the previous render function to delayed render:
+
+        toggleRollButton();
+
+        resetCells();
+
+        for (let i = 0; i < result.length; i++) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            game.result[i] = result[i];
+            $(`#cell-${i + 1}`).text(game.result[i]);
+        }
+        toggleRollButton();
     }
 });
