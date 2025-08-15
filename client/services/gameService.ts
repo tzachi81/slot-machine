@@ -11,7 +11,7 @@ export class GameService {
     async roll(): Promise<IRollResponse> {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: `${this.baseUrl}/role`,
+                url: `${this.baseUrl}/roll`,
                 method: 'GET',
                 dataType: 'json',
                 success: (data: IRollResponse) => {

@@ -2,7 +2,7 @@
 
 //init (game)
 //service instance
-//role click call handler
+//roll click call handler
 //cashOut click handler
 //enable/disable buttons while awaiting response...
 //render results in the cells with delay
@@ -21,7 +21,7 @@ $(function () {
     let game: IRollResponse = { credits: 10, result: ['X', 'X', 'X'] };
 
 
-    $('#roleButton').on('click', async () => {
+    $('#rollButton').on('click', async () => {
         console.log('Roling...');
         await roll();
     });
