@@ -4,7 +4,7 @@
         "module": "es6",
         "outDir": "./dist",
         "rootDir": "./",
-        "strict": true,
+        "strict": false,
         "esModuleInterop": true,
          "moduleResolution": "node",
          "lib": [ "es2015", "dom" ]

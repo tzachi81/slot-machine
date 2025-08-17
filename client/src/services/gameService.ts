@@ -21,7 +21,7 @@ export class GameService {
                 error: (jqXHR, textStatus, errorThrown: string) => {
                     console.error('Error:', textStatus, errorThrown);
                     console.log('Response Text:', jqXHR.responseText);
-                    reject(`Error:, ${textStatus}, ${errorThrown}`);
+                    reject(`Error:, Server is down or unresponsive`);
                 }
             });
         });

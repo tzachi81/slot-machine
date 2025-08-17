@@ -1,5 +1,5 @@
-import { ICashOutResponse, IRollResponse, ISessionResponse } from './types/gameTypes';
-import { GameService } from './services/gameService';
+import { ICashOutResponse, IRollResponse, ISessionResponse } from '../src/types/gameTypes';
+import { GameService } from '../src/services/gameService';
 import $ from 'jquery';
 
 
@@ -9,30 +9,34 @@ $(function () {
 
     let game: IRollResponse = { credits: 10, result: ['X', 'X', 'X'] };
 
-    async function initGame() {
+    initGame();
 
-        $('#resetButton').prop('disabled', true);
-        $('#cashOutButton').removeAttr('disabled');
-        $('#rollButton').removeAttr('disabled');
+    async function initGame() {
 
         $('.cashOut p').hide();
         $('.cashOut #amount').html('');
         $('#credits').html(String(game.credits));
 
-        //Make sure the server session is reset!
+        //Making sure that the server session has been reset!
+        $('#resetButton').prop('disabled', true);
+        $('#cashOutButton').prop('disabled', true);
+        $('#rollButton').prop('disabled', true);
+        $("#sessionMessage").html('Checking server...');
+
         await gameService.checkServer()
-        .then((response: ISessionResponse) => {
-              $("#sessionMessage").html(response.status).fadeOut(3000);
-        }).catch((error: Error) => {
-            $("#sessionMessage").html(`${error.name}, ${error.message}`).fadeOut(3000);
-        }
-        )
+            .then((response: ISessionResponse) => {
+                if(response.status === 'up'){
+                    $("#sessionMessage").html(`Server is ${response.status}. ${response.message}`).fadeOut(3000);
+                    $('#resetButton').prop('disabled', true);
+                    $('#cashOutButton').removeAttr('disabled');
+                    $('#rollButton').removeAttr('disabled');
+                }
+            }).catch((error: unknown) => {
+                $("#sessionMessage").html((error instanceof Error) ? error.message : String(error));
+            }
+            )
 
     }
-
-
-    initGame();
-
 
 
     $('#rollButton').on('click', async () => {
@@ -65,13 +69,13 @@ $(function () {
             await delayedRenderResult(rollResult.result);
 
             updateCredits(rollResult.credits);
-            
+
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
             }
         } finally {
-          
+
         }
     }
 

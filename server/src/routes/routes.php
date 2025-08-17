@@ -5,8 +5,8 @@
 //check out ./functions.php
 
 
-require './functions.php';
-require './variables.php';
+require '../src/config/config.php';
+require '../src/functions/functions.php';
 
 //Display errors
 error_reporting(E_ALL);
@@ -15,10 +15,12 @@ ini_set('display_errors', 1);
 // Start the session
 session_start();
 
-//I allow specific origin for testing, 
+//I allowed specific origin for testing, 
 //can be changed later 
 header('Access-Control-Allow-Origin: http://127.0.0.1:5500');
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header('Content-Type: application/json');
+
 
 
 $requestUri = $_SERVER['REQUEST_URI'];
@@ -36,7 +38,7 @@ if ($requestMethod === 'GET') {
             session_destroy();
             if (session_status() != 1)  session_start();
 
-            echo json_encode(['status' => 'Server is up and running!', 'message' => 'Session has been reset.']);
+            echo json_encode(['status' => 'up', 'message' => 'Session has been reset.']);
 
             break;
         case '/roll':
