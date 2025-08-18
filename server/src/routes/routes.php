@@ -3,8 +3,8 @@
 require '../src/config/config.php';
 require '../src/functions/functions.php';
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+error_reporting(0);
+ini_set('display_errors', 0);
 
 if (isset($_SERVER['HTTP_ORIGIN']) && preg_match('/^http:\/\/(localhost|127\.0\.0\.1):[0-9]+$/', $_SERVER['HTTP_ORIGIN'])) {
     header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
