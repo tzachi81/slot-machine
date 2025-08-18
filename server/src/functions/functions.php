@@ -41,7 +41,6 @@ function getCredits()
 function roll($symbols)
 {
     if (getCredits() > 0) {
-        error_log("### Before deduction: " . getCredits());
         
         $result = createCombination($symbols);
         
@@ -51,12 +50,10 @@ function roll($symbols)
         
         if (isWin($result)) {
             $_SESSION['credits'] += $symbols[$result[0]];
-            error_log("### After win: " . getCredits());
         }else{
             $_SESSION['credits']--;
         }
         
-        error_log("### Before response: " . getCredits());
         return json_encode([
             'credits' => getCredits(),
             'result' => $result
@@ -66,7 +63,6 @@ function roll($symbols)
             'credits' => getCredits(),
             'result' => []
         ]);
-        // return json_encode(['error' => 'Not enough credits']);
     }
 }
 ?>

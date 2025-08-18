@@ -22,10 +22,6 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 if ($requestMethod === 'GET') {
     switch ($requestUri) {
-        case '/health':
-            echo json_encode(['status' => 'up', 'message' => 'Session is active.']);
-            break;
-
         case '/roll':
             echo roll($symbols);
             break;
@@ -33,15 +29,11 @@ if ($requestMethod === 'GET') {
         case '/cashOut':
             echo cashOut();
             break;
-
-        case '/credits':
-            echo json_encode(['credits' => getCredits()]);
-            break;
-
+            
         case '/reset':
             session_unset();
             session_destroy();
-            echo json_encode(['credits' => 3]);
+            echo json_encode(['credits' => getCredits()]);
             break;
 
         default:
