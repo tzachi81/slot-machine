@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { ICreditsResponse, IRollResponse, ISessionResponse } from '../src/types/gameTypes';
+import { IRollResponse } from '../src/types/gameTypes';
 import { GameService } from '../src/services/gameService';
 import { delayedRenderResult, initGame, resetCells, toggleButtons } from '../src/gameUtils/gameUtils';
 
@@ -7,29 +7,23 @@ import { delayedRenderResult, initGame, resetCells, toggleButtons } from '../src
 $(function () {
     const gameService = new GameService();
 
-    const DEFAULT_CREDITS = 3;
-    const game: IRollResponse = {
-        credits: DEFAULT_CREDITS,
-        result: ['X', 'X', 'X']
-    };
-
-
-    initGame(DEFAULT_CREDITS);
+    initGame();
 
 
     /**
      * Register button click handlers
      */
-    
+
     $('#rollButton').on('click', async () => {
-        $('#sessionMessage').html('Rolling...').fadeToggle(500);
+        $('#sessionMessage').show().html('Rolling...');
+        toggleButtons('disable', ['#cashOutButton', '#rollButton']);
+        $('#slots td').removeClass('win').addClass('spinning');
         await roll();
     });
 
     $('#cashOutButton').on('click', async () => {
         await cashOut();
         toggleButtons('disable', ['#cashOutButton', '#rollButton']);
-
     });
 
     $('#resetButton').on('click', async () => {
@@ -38,32 +32,33 @@ $(function () {
 
 
     async function resetGame() {
-        const resetGameCredits: ICreditsResponse = await gameService.gameRequest('/reset');
+        const resetGameCredits: IRollResponse = await gameService.gameRequest('/reset');
+        console.log('RESET CREDITS', resetGameCredits);
         updateCredits(resetGameCredits.credits);
         resetCells();
-        initGame(DEFAULT_CREDITS);
+        initGame();
     }
 
     async function roll(): Promise<void> {
 
-        toggleButtons('disable', ['#cashOutButton', '#rollButton']);
         try {
 
             const rollResult: IRollResponse = await gameService.gameRequest('/roll');
-            game.result = rollResult.result;
+            gameService.gameData.result = rollResult.result;
 
             await delayedRenderResult(rollResult.result);
 
+            $('#sessionMessage').hide('slow');
+
             updateCredits(rollResult.credits);
 
-            $('#sessionMessage').hide();
 
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
             }
         } finally {
-            if (game.credits === 0) {
+            if (gameService.gameData.credits === 0) {
                 toggleButtons('disable', ['#cashOutButton', '#rollButton']);
             } else {
                 toggleButtons('enable', '#cashOutButton');
@@ -74,8 +69,9 @@ $(function () {
     async function cashOut(): Promise<void> {
 
         try {
-            const cashOutResult: ICreditsResponse = await gameService.gameRequest('/cashOut')
-            $('.cashOut #amount').html(String(cashOutResult.credits));
+            const cashOutResult: IRollResponse = await gameService.gameRequest('/cashOut');
+            $('#sessionMessage').show().html(`You get: ${String(cashOutResult.credits)}`);
+
             updateCredits(0);
 
         } catch (error: unknown) {
@@ -83,17 +79,17 @@ $(function () {
                 console.error('Failed to roll:', error);
             }
         } finally {
-            $('.cashOut p').show();
             toggleButtons('enable', '#resetButton');
         }
     }
 
-    function updateCredits(credits: number) {
-        if (credits === 0) {
+    async function updateCredits(credits: number) {
+        console.log('UPDATING IN-GAME CREDITS');
+        await gameService.updateCredits(credits);
+        if (gameService.gameData.credits === 0) {
             toggleButtons('enable', '#resetButton');
         }
-        game.credits = credits;
-        $('#credits').html(String(credits));
+        $('#credits').html(String(gameService.gameData.credits));
     }
 
 });

@@ -8,34 +8,43 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
+<head>
+    <meta charset="UTF-8">
+    <title>Slot Machine App</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
 <body>
-    <h1>Slot Machine</h1>
-    <div class="creditsWrapper">
-        <label>Credits: </label>
-        <span id="credits"></span>
-    </div>
-
-
-    <div class="mainContent">
-        <table class="slotTable">
-            <tr id="slots">
-                <td id="cell-1">X</td>
-                <td id="cell-2">X</td>
-                <td id="cell-3">X</td>
-            </tr>
-        </table>
-
-        <div class="actionButtons">
-            <button id="rollButton">Roll</button>
-            <button id="cashOutButton">Cash Out</button>
-            <button id="resetButton">Play Again</button>
+    <div class="gameContainer">
+        <h1>Slot Machine</h1>
+        <div class="creditsWrapper">
+            <label>Credits: </label>
+            <span id="credits"></span>
         </div>
-        <!-- mainContent -->
-        <div class="cashOut">
-            <p><label>You get: </label><span id="amount"></span></p>
-            </p>
+
+
+        <div class="mainContent">
+            <table class="slotTable">
+                <tr id="slots">
+                    <td id="cell-1">X</td>
+                    <td id="cell-2">X</td>
+                    <td id="cell-3">X</td>
+                </tr>
+            </table>
+
+            <div class="actionButtons">
+                <button id="rollButton">Roll</button>
+                <button id="cashOutButton">Cash Out</button>
+                <button id="resetButton">Play Again</button>
+            </div>
+            <div class="systemMessage">
+                <p id="sessionMessage"></p>
+            </div>
         </div>
-        <p id="sessionMessage"></p>
     </div>
 
     <script src="../dist/game.umd.js"></script>

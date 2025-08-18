@@ -1,14 +1,26 @@
-import { IResponseTypes } from '../types/gameTypes';
+import { IRollResponse } from '../types/gameTypes';
 import $ from 'jquery';
 
 export class GameService {
-    private readonly baseUrl: string;
 
+    private readonly baseUrl: string;
+    
+    
     constructor(baseUrl: string = 'http://localhost:8000') {
         this.baseUrl = baseUrl;
     }
+    
+    public gameData: IRollResponse = {
+        credits: 0,
+        result: []
+    };
+    
+    async updateCredits(credits: number) {
+        console.log('UPDATING SERVER CREDITS', credits);
+        this.gameData.credits = credits;
+    }
 
-    async gameRequest(endpoint: string, method: string = 'GET', dataType: string = 'json', data: any = null): Promise<keyof IResponseTypes> {
+    async gameRequest(endpoint: string, method: string = 'GET', dataType: string = 'json', data: any = null): Promise<IRollResponse> {
 
         const url = `${this.baseUrl}${endpoint}`;
 

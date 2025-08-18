@@ -19,7 +19,6 @@ header('Content-Type: application/json');
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-
 if ($requestMethod === 'GET') {
     switch ($requestUri) {
         case '/roll':
@@ -33,7 +32,7 @@ if ($requestMethod === 'GET') {
         case '/reset':
             session_unset();
             session_destroy();
-            echo json_encode(['credits' => getCredits()]);
+            echo json_encode(['credits' => 3]);
             break;
 
         default:
@@ -45,7 +44,4 @@ if ($requestMethod === 'GET') {
     http_response_code(405);
     echo json_encode(['error' => 'Method not allowed']);
 }
-
-//For testings
-// error_log("Session closing: ID = " . session_id() . ", credits = " . $_SESSION['credits']);
 ?>
