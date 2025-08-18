@@ -1,91 +1,82 @@
-import { ICashOutResponse, IRollResponse, ISessionResponse } from '../src/types/gameTypes';
-import { GameService } from '../src/services/gameService';
 import $ from 'jquery';
+import { ICreditsResponse, IRollResponse, ISessionResponse } from '../src/types/gameTypes';
+import { GameService } from '../src/services/gameService';
+import { delayedRenderResult, initGame, resetCells, toggleButtons } from '../src/gameUtils/gameUtils';
 
 
 $(function () {
-    const baseApiUrl = 'http://localhost:8000';
-    const gameService = new GameService(baseApiUrl);
+    const gameService = new GameService();
 
-    let game: IRollResponse = { credits: 10, result: ['X', 'X', 'X'] };
-
-    initGame();
-
-    async function initGame() {
-
-        $('.cashOut p').hide();
-        $('.cashOut #amount').html('');
-        $('#credits').html(String(game.credits));
-
-        //Making sure that the server session has been reset!
-        $('#resetButton').prop('disabled', true);
-        $('#cashOutButton').prop('disabled', true);
-        $('#rollButton').prop('disabled', true);
-        $("#sessionMessage").html('Checking server...');
-
-        await gameService.checkServer()
-            .then((response: ISessionResponse) => {
-                if(response.status === 'up'){
-                    $("#sessionMessage").html(`Server is ${response.status}. ${response.message}`).fadeOut(3000);
-                    $('#resetButton').prop('disabled', true);
-                    $('#cashOutButton').removeAttr('disabled');
-                    $('#rollButton').removeAttr('disabled');
-                }
-            }).catch((error: unknown) => {
-                $("#sessionMessage").html((error instanceof Error) ? error.message : String(error));
-            }
-            )
-
-    }
+    const DEFAULT_CREDITS = 3;
+    const game: IRollResponse = {
+        credits: DEFAULT_CREDITS,
+        result: ['X', 'X', 'X']
+    };
 
 
+    initGame(DEFAULT_CREDITS);
+
+
+    /**
+     * Register button click handlers
+     */
+    
     $('#rollButton').on('click', async () => {
-        $("#rollButton").prop('disabled', true);
+        $('#sessionMessage').html('Rolling...').fadeToggle(500);
         await roll();
     });
 
     $('#cashOutButton').on('click', async () => {
         await cashOut();
-        $("#rollButton").prop('disabled', true);
-        $('#cashOutButton').prop('disabled', true);
+        toggleButtons('disable', ['#cashOutButton', '#rollButton']);
+
     });
 
-    $('#resetButton').on('click', () => {
-        initGame();
+    $('#resetButton').on('click', async () => {
+        await resetGame();
     });
+
+
+    async function resetGame() {
+        const resetGameCredits: ICreditsResponse = await gameService.gameRequest('/reset');
+        updateCredits(resetGameCredits.credits);
+        resetCells();
+        initGame(DEFAULT_CREDITS);
+    }
 
     async function roll(): Promise<void> {
 
+        toggleButtons('disable', ['#cashOutButton', '#rollButton']);
         try {
-            game.credits--;
-            updateCredits(game.credits);
-            if (game.credits === 0) {
-                return;
-            }
 
-            const rollResult: IRollResponse = await gameService.roll();
-            console.log('rollResult', rollResult);
+            const rollResult: IRollResponse = await gameService.gameRequest('/roll');
+            game.result = rollResult.result;
 
             await delayedRenderResult(rollResult.result);
 
             updateCredits(rollResult.credits);
+
+            $('#sessionMessage').hide();
 
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
             }
         } finally {
-
+            if (game.credits === 0) {
+                toggleButtons('disable', ['#cashOutButton', '#rollButton']);
+            } else {
+                toggleButtons('enable', '#cashOutButton');
+            }
         }
     }
 
     async function cashOut(): Promise<void> {
 
         try {
-            const cashOutResult: ICashOutResponse = await gameService.cashOut();
-            updateCredits(cashOutResult.credits);
-            const total = cashOutResult.credits + game.credits;
-            $('.cashOut #amount').html(String(total));
+            const cashOutResult: ICreditsResponse = await gameService.gameRequest('/cashOut')
+            $('.cashOut #amount').html(String(cashOutResult.credits));
+            updateCredits(0);
 
         } catch (error: unknown) {
             if (typeof error === 'string') {
@@ -93,33 +84,16 @@ $(function () {
             }
         } finally {
             $('.cashOut p').show();
-            $('#resetButton').removeAttr('disabled');
+            toggleButtons('enable', '#resetButton');
         }
     }
 
     function updateCredits(credits: number) {
-        game.credits = credits;
-        if (credits) $('#credits').html(String(game.credits));
-    }
-
-
-    function resetCells() {
-        game.result.forEach((symbol, index) => {
-            $(`#cell-${index + 1}`).text('X');
-        });
-    }
-
-    async function delayedRenderResult(result: string[]): Promise<void> {
-        //I replaced the previous render function to delayed render:
-
-
-        resetCells();
-
-        for (let i = 0; i < result.length; i++) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            game.result[i] = result[i];
-            $(`#cell-${i + 1}`).text(game.result[i]);
+        if (credits === 0) {
+            toggleButtons('enable', '#resetButton');
         }
-        $("#rollButton").removeAttr('disabled');
+        game.credits = credits;
+        $('#credits').html(String(credits));
     }
+
 });

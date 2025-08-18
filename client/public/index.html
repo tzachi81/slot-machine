@@ -18,7 +18,7 @@
 
     <div class="mainContent">
         <table class="slotTable">
-            <tr>
+            <tr id="slots">
                 <td id="cell-1">X</td>
                 <td id="cell-2">X</td>
                 <td id="cell-3">X</td>
@@ -31,13 +31,13 @@
             <button id="resetButton">Play Again</button>
         </div>
         <!-- mainContent -->
-    </div>
-    <div class="cashOut">
-        <p><label>You get: </label><span id="amount"></span></p>
-        </p>
+        <div class="cashOut">
+            <p><label>You get: </label><span id="amount"></span></p>
+            </p>
+        </div>
+        <p id="sessionMessage"></p>
     </div>
 
-    <p id="sessionMessage"></p>
     <script src="../dist/game.umd.js"></script>
 
 </body>

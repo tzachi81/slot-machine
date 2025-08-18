@@ -1,7 +1,11 @@
 {
     "scripts": {
         "tsc": "./node_modules/typescript/bin/tsc",
-        "build": "vite build"
+        "build": "vite build",
+        "start": "vite devServer --open --port 5500",
+        "dev": "vite",
+        "lint": "eslint --ext .ts,.tsx .",
+        "test": "vitest"
     },
     "devDependencies": {
         "@types/node": "^24.3.0",

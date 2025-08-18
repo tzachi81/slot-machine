@@ -3,11 +3,11 @@ export interface IRollResponse {
     result: string[];
 }
 
-export interface ICashOutResponse {
-    credits: number;
+export interface ISessionResponse {
+    status: string,
+    message: string
 }
 
-export interface ISessionResponse {
-    status:string,
-    message:string
-}
+export type ICreditsResponse  = Omit<IRollResponse, 'result'>
+
+export type IResponseTypes = IRollResponse | ISessionResponse | ICreditsResponse

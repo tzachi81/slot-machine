@@ -13,6 +13,7 @@
     color: var(--gameGoldText);
     text-align: center;
     background-color: rgba(23, 23, 23, 0.8);
+    min-width: 350px;
  }
  label,p {
     font-size: 18px;
@@ -43,6 +44,8 @@ button{
     margin-bottom: 17px;
 }
  .slotTable {
+    display: flex;
+    justify-self: center;
      border-collapse: collapse;
      margin: 20px;
  }
