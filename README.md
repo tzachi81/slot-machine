@@ -3,10 +3,22 @@ slot-machine game jQuery + php
 
 
 # Run
-## Server
+## Server - Development
+from [ROOT]/server, run:
+`composer install`
+
 From [ROOT] folder, run:
 (no need to cd into /server folder)
 - `php -S localhost:8000 -t server/public`
+- Use this .env file configuration:
+>APP_ENV=development
+>APP_DEBUG=true
+>APP_URL=http://localhost:5500
+
+>SESSION_NAME=PHPSESSID
+>SESSION_LIFETIME=1440
+
+## Server - Production
 
 ## Client
 From `[ROOT]/client` folder, run:

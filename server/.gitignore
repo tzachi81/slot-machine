@@ -1,0 +1,10 @@
+# Ignore the .env file
+.env
+
+# Ignore the vendor directory
+/vendor/
+
+# Other common ignores
+*.log
+*.tmp
+.DS_Store
