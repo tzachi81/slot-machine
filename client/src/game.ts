@@ -1,21 +1,25 @@
 import $ from 'jquery';
 import { IRollResponse } from '../src/types/gameTypes';
 import { GameService } from '../src/services/gameService';
-import { delayedRenderResult, initGame, resetCells, toggleButtons } from '../src/gameUtils/gameUtils';
+import { delayedRenderResult, hideSessionMessage, initGame, resetCells, showSessionMessage, toggleButtons } from '../src/gameUtils/gameUtils';
 
 
 $(function () {
     const gameService = new GameService();
 
-    initGame();
+    /**
+     * Initialize game
+     */
 
+    initGame();
 
     /**
      * Register button click handlers
      */
 
     $('#rollButton').on('click', async () => {
-        $('#sessionMessage').show().html('Rolling...');
+        
+        showSessionMessage('Rolling...');
         toggleButtons('disable', ['#cashOutButton', '#rollButton']);
         $('#slots td').removeClass('win').addClass('spinning');
         await roll();
@@ -27,17 +31,8 @@ $(function () {
     });
 
     $('#resetButton').on('click', async () => {
-        await resetGame();
+        await initGame();
     });
-
-
-    async function resetGame() {
-        const resetGameCredits: IRollResponse = await gameService.gameRequest('/reset');
-        console.log('RESET CREDITS', resetGameCredits);
-        updateCredits(resetGameCredits.credits);
-        resetCells();
-        initGame();
-    }
 
     async function roll(): Promise<void> {
 
@@ -46,13 +41,20 @@ $(function () {
             const rollResult: IRollResponse = await gameService.gameRequest('/roll');
             gameService.gameData.result = rollResult.result;
 
-            await delayedRenderResult(rollResult.result);
+            const isWinnerroll = await delayedRenderResult(rollResult.result);
 
-            $('#sessionMessage').hide('slow');
+            if (isWinnerroll) {
+                $('#slots td').addClass('win');
+                showSessionMessage('Win!');
+            } else {
+                $('#slots td').removeClass('win');
+            }
 
-            updateCredits(rollResult.credits);
+            toggleButtons('enable', '#rollButton');
 
-
+            await updateCredits(rollResult.credits);
+            
+            
         } catch (error: unknown) {
             if (typeof error === 'string') {
                 console.error('Failed to roll:', error);
@@ -63,6 +65,7 @@ $(function () {
             } else {
                 toggleButtons('enable', '#cashOutButton');
             }
+            hideSessionMessage();
         }
     }
 
@@ -70,9 +73,9 @@ $(function () {
 
         try {
             const cashOutResult: IRollResponse = await gameService.gameRequest('/cashOut');
-            $('#sessionMessage').show().html(`You get: ${String(cashOutResult.credits)}`);
+            showSessionMessage(`You get: ${String(cashOutResult.credits)}`);
 
-            updateCredits(0);
+            await updateCredits(0);
 
         } catch (error: unknown) {
             if (typeof error === 'string') {
@@ -84,12 +87,11 @@ $(function () {
     }
 
     async function updateCredits(credits: number) {
-        console.log('UPDATING IN-GAME CREDITS');
-        await gameService.updateCredits(credits);
+        await gameService.updateGamesCredits(credits);
+        $('#credits').html(String(gameService.gameData.credits));
         if (gameService.gameData.credits === 0) {
             toggleButtons('enable', '#resetButton');
         }
-        $('#credits').html(String(gameService.gameData.credits));
     }
 
 });

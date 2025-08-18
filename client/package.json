@@ -2,8 +2,8 @@
     "scripts": {
         "tsc": "./node_modules/typescript/bin/tsc",
         "build": "vite build",
-        "start": "vite devServer --open --port 5500",
-        "dev": "vite",
+        "start": "vite preview --open",
+        "dev": "vite --open",
         "lint": "eslint --ext .ts,.tsx .",
         "test": "vitest"
     },
@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "@types/jquery": "^3.5.32",
+        "dotenv": "^17.2.1",
         "jquery": "^3.7.1"
     }
 }

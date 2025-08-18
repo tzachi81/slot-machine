@@ -3,7 +3,7 @@ import $ from 'jquery';
 
 export class GameService {
 
-    private readonly baseUrl: string;
+    private readonly baseUrl: string = 'http://localhost:8000';
     
     
     constructor(baseUrl: string = 'http://localhost:8000') {
@@ -15,8 +15,7 @@ export class GameService {
         result: []
     };
     
-    async updateCredits(credits: number) {
-        console.log('UPDATING SERVER CREDITS', credits);
+    async updateGamesCredits(credits: number) {
         this.gameData.credits = credits;
     }
 

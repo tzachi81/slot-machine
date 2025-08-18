@@ -1,0 +1,148 @@
+:root {
+    --gameGold: #FFD700;
+    --gameGoldAccent: rgba(255, 215, 0, 0.3);
+    --gameGoldText: #FFFFFF;
+    --gameButtonDisabled: rgba(255, 215, 0, 0.2);
+    --gameWin: rgba(90, 241, 9, 0.5);
+    --dark-bg: #1a1a1a;
+    --light-bg: #2a2a2a;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--gameGoldText);
+    background-color: var(--dark-bg);
+}
+
+.gameContainer {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    border: 2px solid var(--gameGold);
+    max-height: 95vh;
+    overflow-y: auto;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: var(--gameGold);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 15px;
+}
+
+label,
+p {
+    font-size: 1em;
+}
+
+button {
+    border: none;
+    height: 45px;
+    background: linear-gradient(145deg, var(--gameGold), #b89b00);
+    box-shadow: 5px 5px 10px #121212, -5px -5px 10px #222222;
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--dark-bg);
+    margin: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+    width: 130px;
+}
+
+button:hover {
+    background: linear-gradient(145deg, #b89b00, var(--gameGold));
+}
+
+button:active {
+    box-shadow: inset 5px 5px 10px #121212, inset -5px -5px 10px #222222;
+    transform: translateY(2px);
+}
+
+button:disabled {
+    background: var(--gameButtonDisabled);
+    color: var(--gameGoldAccent);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.creditsWrapper {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.slotTable {
+    display: flex;
+    justify-content: center;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.slotTable td {
+    border: 5px dashed var(--gameGold);
+    width: 70px;
+    height: 70px;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: bold;
+    background-color: var(--dark-bg);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin: 0 5px;
+    
+}
+#slots td{
+    &.win{
+    border: 5px dashed var(--gameWin);        
+}
+}
+
+.actionButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.systemMessage{
+    height: 30px;
+}
+
+#sessionMessage {
+    margin-top: 15px;
+    font-size: 1em;
+    color: var(--gameGold);
+}
+
+@keyframes spin {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+
+    50% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+}
+
+.spinning {
+    animation: spin 0.2s linear infinite;
+}

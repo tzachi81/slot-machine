@@ -1,5 +1,5 @@
-import { GameService } from "../services/gameService";
-import { IRollResponse } from "../types/gameTypes";
+import { GameService } from '../services/gameService';
+import { IRollResponse } from '../types/gameTypes';
 
 
 function getFruitIcon(letter: string): string {
@@ -43,12 +43,11 @@ export function resetCells() {
     });
 }
 
-export async function delayedRenderResult(result: string[]): Promise<void> {
+export async function delayedRenderResult(result: string[]): Promise<boolean> {
 
     resetCells();
 
     const delayMs = 1000;
-
 
     for (let i = 0; i < result.length; i++) {
         await new Promise(resolve => setTimeout(resolve, delayMs));
@@ -56,40 +55,35 @@ export async function delayedRenderResult(result: string[]): Promise<void> {
     }
 
     const firstItem = result[0];
-    const isWin = result.every(item => item === firstItem);
-
-    if (isWin) {
-        $('#slots td').addClass('win');
-        $('#sessionMessage').show().html('Win!')
-    } else {
-        $('#slots td').removeClass('win');
-    }
-
-    toggleButtons('enable', '#rollButton');
+    const isWinnerRoll = result.every(item => item === firstItem);
+    return isWinnerRoll;
 }
 
 export async function initGame() {
 
     const gameService = new GameService();
 
-    $('#credits').html(String(gameService.gameData.credits));
-    $('#slots td').removeClass('win')
-
-    toggleButtons('enable', ['#cashOutButton', '#rollButton']);
-
-    $("#sessionMessage").html('Checking server...');
-
     resetCells();
 
     await gameService.gameRequest('/reset')
         .then((response: IRollResponse) => {
-            $("#sessionMessage").html(`Server is up.`).fadeOut(2000);
+            showSessionMessage(`Server is up.`);
             toggleButtons('disable', '#resetButton');
             toggleButtons('enable', ['#cashOutButton', '#rollButton']);
             gameService.gameData.credits = response.credits;
         }).catch((error: unknown) => {
-            $("#sessionMessage").html((error instanceof Error) ? error.message : String(error));
+            showSessionMessage((error instanceof Error) ? error.message : String(error));
         }
         )
 
+    $('#credits').html(String(gameService.gameData.credits));
+    $('#slots td').removeClass('win');
+
+}
+
+export function showSessionMessage(message: string) {
+     $('#sessionMessage').html(message).fadeToggle(2000);
+}
+export function hideSessionMessage() {
+     $('#sessionMessage').hide('slow');
 }

@@ -10,6 +10,11 @@ From [ROOT] folder, run:
 
 ## Client
 From [ROOT]/client folder, run:
+
+### Development
   - `npm install`
+  - `npm run dev`
+
+### Production
   - `npm run build`
-  double click to open the public/index.html file in your browser
+  - `npm run start`
