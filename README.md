@@ -44,9 +44,9 @@ From `[ROOT]/client` folder, run:
 # Development Journey
 > *I don't know php*, but:
 
-My comfortable backend development technology usually Node.js/Next.js. In this project I got out of my comfort zone and chose my server to be php so I can have a chance to learn this technology and to show my abilities to learn new language in a short-time period.
+My comfortable backend development technology usually is Node.js/Next.js. In this project I got out of my comfort zone and chose the server to be PHP, so I can have a chance to learn this technology and to show my abilities to learn new language in a short-time period.
 ## Issues with the server development
-- session handling - It took me some time to understand the session cycle and how to handle it, especially when you use `$_SESSION` variables alongside `session_[]()` functions (reset, unset,start) while importing files from other paths than index.php's path.
+- Session handling - It took me some time to understand the session cycle and how to handle it, especially when you use `$_SESSION` variables alongside `session_[]()` functions (reset, unset, start) while importing files from other paths than index.php's path.
 
 ## Client- JS + Jquery
 - The client side was much easier as I am front-end oriented developer. I have'nt developed in jQuery for a long long time, but I think I managed quite well.
@@ -56,6 +56,6 @@ My comfortable backend development technology usually Node.js/Next.js. In this p
 - I selected the fruit emojis from: https://emojipedia.org/en
 - For developing the server, I used:
   - [https://www.php.net/](https://www.php.net/)
-  - (php sessions)[https://www.php.net/manual/en/book.session.php]
+  - [php sessions](https://www.php.net/manual/en/book.session.php)
   - [php-tutorial-for-beginners](https://code.tutsplus.com/php-tutorial-for-beginners-free-7-hour-course--ytc-16c)
   - StackOverflow
