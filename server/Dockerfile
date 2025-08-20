@@ -1,15 +1,22 @@
 # Use the official PHP image
-FROM php:8.0-cli
+FROM php:8.0-apache
 
-# Install any necessary dependencies
-COPY . /app
-WORKDIR /app
+# Install necessary PHP extensions
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    && docker-php-ext-install zip
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set the working directory to the server folder
+WORKDIR /appProject/server
+
+# Copy application files into the container
+COPY ./server/ .
 
 # Install PHP dependencies
 RUN composer install
 
-# Start the PHP built-in server
-CMD ["php", "-S", "0.0.0.0:10000", "-t", "."]
+# Optional: If you need to expose a specific port, you can do so
+EXPOSE 80
