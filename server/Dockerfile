@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set the working directory to the server folder
-WORKDIR /appProject/server
+WORKDIR /slot-machine/server
 
 # Copy application files into the container
 COPY ./server/ .
